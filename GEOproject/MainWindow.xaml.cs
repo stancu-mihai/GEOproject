@@ -18,13 +18,24 @@ namespace GEOproject
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Drawing : Window
     {
         List<Point> points = new List<Point>();
 
-        public MainWindow()
+        public Drawing()
         {
             InitializeComponent();
+        }
+
+        private void DrawLine(Point p1, Point p2)
+        {
+            Line line = new Line();
+            line.Stroke = SystemColors.WindowFrameBrush;
+            line.X1 = p1.X;
+            line.Y1 = p1.Y;
+            line.X2 = p2.X;
+            line.Y2 = p2.Y;
+            drawSurface.Children.Add(line);
         }
 
         private void Canvas_MouseDown_1(object sender, MouseButtonEventArgs e)
@@ -36,19 +47,19 @@ namespace GEOproject
             }
             else
             {
-                Line line = new Line();
-
-                var lastPoint = points[points.Count - 1];
-                line.Stroke = SystemColors.WindowFrameBrush;
-                line.X1 = lastPoint.X;
-                line.Y1 = lastPoint.Y;
-                line.X2 = e.GetPosition(this).X;
-                line.Y2 = e.GetPosition(this).Y;
-
-                points.Add(e.GetPosition(this));
-
-                drawSurface.Children.Add(line);
+                Point lastPoint = points[points.Count - 1];
+                Point currPoint = e.GetPosition(this);
+                points.Add(currPoint);
+                DrawLine(lastPoint, currPoint);
             }
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            Point firstPoint = points[0];
+            Point lastPoint = points[points.Count - 1];
+            points.Add(firstPoint);
+            DrawLine(lastPoint, firstPoint);
         }
     }
 }
