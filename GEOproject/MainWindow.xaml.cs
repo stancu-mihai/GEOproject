@@ -61,5 +61,11 @@ namespace GEOproject
             points.Add(firstPoint);
             DrawLine(lastPoint, firstPoint);
         }
+
+        private void Undo_Click(object sender, RoutedEventArgs e)
+        {
+            points.RemoveAt(points.Count - 1);
+            drawSurface.Children.RemoveAt(drawSurface.Children.Count - 1);
+        }
     }
 }

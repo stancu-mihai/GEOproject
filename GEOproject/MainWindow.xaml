@@ -13,7 +13,7 @@
             </Canvas.Background>
         </Canvas>
         <Button Content="Close" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,9,0,0" Width="68" Height="25" Click="Close_Click"/>
-        <Button Content="Reset" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="83,9,0,0" Width="68"  Height="25"/>
+        <Button Content="Undo" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="83,9,0,0" Width="68"  Height="25" Click="Undo_Click"/>
         <Button Content="Compute" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="157,9,0,0" Width="68"  Height="25"/>
     </Grid>
 </Window>
