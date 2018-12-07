@@ -20,7 +20,7 @@ namespace GEOproject
     /// </summary>
     public partial class MainWindow : Window
     {
-        Point prevPoint = new Point();
+        List<Point> points = new List<Point>();
 
         public MainWindow()
         {
@@ -29,22 +29,23 @@ namespace GEOproject
 
         private void Canvas_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
-            if ((prevPoint.X == 0) && (prevPoint.Y == 0))
+            // If this is the first point
+            if (points.Count() == 0)
             {
-                prevPoint.X = e.GetPosition(this).X;
-                prevPoint.Y = e.GetPosition(this).Y;
+                points.Add(e.GetPosition(this));
             }
             else
             {
                 Line line = new Line();
 
+                var lastPoint = points[points.Count - 1];
                 line.Stroke = SystemColors.WindowFrameBrush;
-                line.X1 = prevPoint.X;
-                line.Y1 = prevPoint.Y;
+                line.X1 = lastPoint.X;
+                line.Y1 = lastPoint.Y;
                 line.X2 = e.GetPosition(this).X;
                 line.Y2 = e.GetPosition(this).Y;
 
-                prevPoint = e.GetPosition(this);
+                points.Add(e.GetPosition(this));
 
                 drawSurface.Children.Add(line);
             }
