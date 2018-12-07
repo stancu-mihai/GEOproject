@@ -6,8 +6,13 @@
         xmlns:local="clr-namespace:GEOproject"
         mc:Ignorable="d"
         Title="Mihai Stancu's project" Height="450" Width="800">
-    <Grid Name ="myGrid" HorizontalAlignment="Left" Width="792" Height="419" VerticalAlignment="Top">
+    <Grid>
         <Button Content="Reset" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,9,0,0" Width="68" Height="25"/>
         <Button Content="Compute" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="83,9,0,0" Width="68"  Height="25"/>
+        <Canvas  Name="drawSurface" MouseDown="Canvas_MouseDown_1">
+            <Canvas.Background>
+                <SolidColorBrush Color="White" Opacity="0"/>
+            </Canvas.Background>
+        </Canvas>
     </Grid>
 </Window>
