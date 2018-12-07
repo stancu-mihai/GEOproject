@@ -38,6 +38,18 @@ namespace GEOproject
             drawSurface.Children.Add(line);
         }
 
+        private bool IsClockwise()
+        {
+            double sum = 0;
+            for (int i = 0; i < points.Count(); i++)
+            {
+                Point p1 = points[i];
+                Point p2 = points[(i + 1) % points.Count()];
+                sum += (p2.X - p1.X) * (p2.Y + p1.Y);
+            }
+            return sum < 0;
+        }
+
         private void Canvas_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
             // If this is the first point
@@ -66,6 +78,18 @@ namespace GEOproject
         {
             points.RemoveAt(points.Count - 1);
             drawSurface.Children.RemoveAt(drawSurface.Children.Count - 1);
+        }
+
+        private void Compute_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsClockwise())
+            {
+                MessageBox.Show("Clockwise!");
+            }
+            else
+            {
+                MessageBox.Show("Counterclockwise");
+            }
         }
     }
 }
