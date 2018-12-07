@@ -21,6 +21,7 @@ namespace GEOproject
     public partial class MainWindow : Window
     {
         List<Point> points = new List<Point>();
+        List<Polygon> triangles = new List<Polygon>();
 
         public MainWindow()
         {
@@ -47,7 +48,66 @@ namespace GEOproject
                 Point p2 = points[(i + 1) % points.Count()];
                 sum += (p2.X - p1.X) * (p2.Y + p1.Y);
             }
-            return sum < 0;
+            return sum >= 0;
+        }
+
+        private bool ValidTriangle(Polygon triangle, Point p1, Point p2, Point p3)
+        {
+            foreach (Point p in points)
+            {
+                if (p != p1 && p != p2 && p != p3 && triangle.Points.IndexOf(p) >= 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private void TriangulatePolygon()
+        {
+            bool clockwise = IsClockwise();
+            int index = 0;
+
+            while (points.Count() > 2)
+            {
+
+                Point p1 = points[(index + 0) % points.Count()];
+                Point p2 = points[(index + 1) % points.Count()];
+                Point p3 = points[(index + 2) % points.Count()];
+                
+                Vector v1 = new Vector(p2.X - p1.X, p2.Y - p1.Y);
+                Vector v2 = new Vector(p3.X - p1.X, p3.Y - p1.Y);
+                double cross = Vector.CrossProduct(v1, v2);
+
+                Polygon triangle = new Polygon();
+                PointCollection trianglePointCollection = new PointCollection();
+                trianglePointCollection.Add(p1);
+                trianglePointCollection.Add(p2);
+                trianglePointCollection.Add(p3);
+                triangle.Points = trianglePointCollection;
+
+                if (!clockwise && cross >= 0 && ValidTriangle(triangle, p1, p2, p3))
+                {
+                    points.Remove(p2);
+                    triangles.Add(triangle);
+                    drawSurface.Children.Add(triangle);
+                }
+                else if (clockwise && cross <= 0 && ValidTriangle(triangle, p1, p2, p3))
+                {
+                    points.Remove(p2);
+                    triangles.Add(triangle);
+                    drawSurface.Children.Add(triangle);
+                }
+                else
+                {
+                    index++;
+                }
+            }
+
+            if (points.Count() < 3)
+            {
+                points.Clear();
+            }
         }
 
         private void Canvas_MouseDown_1(object sender, MouseButtonEventArgs e)
@@ -70,7 +130,6 @@ namespace GEOproject
         {
             Point firstPoint = points[0];
             Point lastPoint = points[points.Count - 1];
-            points.Add(firstPoint);
             DrawLine(lastPoint, firstPoint);
         }
 
@@ -82,14 +141,7 @@ namespace GEOproject
 
         private void Compute_Click(object sender, RoutedEventArgs e)
         {
-            if (IsClockwise())
-            {
-                MessageBox.Show("Clockwise!");
-            }
-            else
-            {
-                MessageBox.Show("Counterclockwise");
-            }
+            TriangulatePolygon();
         }
     }
 }
