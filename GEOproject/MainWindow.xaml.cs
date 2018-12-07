@@ -18,11 +18,11 @@ namespace GEOproject
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class Drawing : Window
+    public partial class MainWindow : Window
     {
         List<Point> points = new List<Point>();
 
-        public Drawing()
+        public MainWindow()
         {
             InitializeComponent();
         }
