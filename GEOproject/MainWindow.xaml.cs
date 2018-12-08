@@ -78,12 +78,14 @@ namespace GEOproject
             return sum >= 0;
         }
 
-        // Determine if a point is in a polygon
+        // Determine if a point is in a polygon by looping through the sides in the same direction,
+        // while checking if the number of nodes is odd (meaning the point is inside)
         // http://dominoc925.blogspot.com/2012/02/c-code-snippet-to-determine-if-point-is.html
-        private bool IsPointInPolygon(Polygon pg, Point p)
+        private bool IsPointInTriangle(Polygon pg, Point p)
         {
             bool isInside = false;
-            for (int i = 0, j = pg.Points.Count - 1; i < pg.Points.Count; j = i++) // i0 j2, i1 j0, i2 j1
+            int j = pg.Points.Count - 1; // starts from the last point
+            for (int i = 0; i < pg.Points.Count; i++) // loops through each side of the polygon
             {
                 Point pi = pg.Points[i];
                 Point pj = pg.Points[j];
@@ -92,15 +94,17 @@ namespace GEOproject
                 {
                     isInside = !isInside;
                 }
+                j = i;
             }
             return isInside;
         }
 
+        // Checks if the triangle is valid
         private bool ValidTriangle(Polygon triangle, Point p1, Point p2, Point p3)
         {
             foreach (Point p in points)
             {
-                if (p != p1 && p != p2 && p != p3 && IsPointInPolygon(triangle, p))
+                if (p != p1 && p != p2 && p != p3 && IsPointInTriangle(triangle, p))
                 {
                     return false;
                 }
@@ -108,6 +112,8 @@ namespace GEOproject
             return true;
         }
 
+        // Triangulation by ear clipping algorithm
+        // https://github.com/leonardo-ono/Java2DTriangulationAlgorithmTest1/blob/master/src/View.java
         private void TriangulatePolygon()
         {
             bool clockwise = IsClockwise();
@@ -116,14 +122,17 @@ namespace GEOproject
             while (points.Count() > 2)
             {
                 int len = points.Count();
+                // Takes 3 adjacent points
                 Point p1 = points[(index + 0) % len];
                 Point p2 = points[(index + 1) % len];
                 Point p3 = points[(index + 2) % len];
                 
+                // Makes vectors and cross product
                 Vector v1 = new Vector(p2.X - p1.X, p2.Y - p1.Y);
                 Vector v2 = new Vector(p3.X - p1.X, p3.Y - p1.Y);
                 double cross = Vector.CrossProduct(v1, v2);
 
+                // Creates a triangle
                 Polygon triangle = new Polygon();
                 PointCollection trianglePointCollection = new PointCollection();
                 trianglePointCollection.Add(p1);
@@ -133,6 +142,7 @@ namespace GEOproject
                 triangle.Stroke = Brushes.Red;
                 triangle.StrokeThickness = 2;
 
+                // If the polygon is CCW and the cross product positive and the triangle is valid then we found an ear
                 if (!clockwise && cross >= 0 && ValidTriangle(triangle, p1, p2, p3))
                 {
                     points.Remove(p2);
@@ -140,6 +150,7 @@ namespace GEOproject
                     triangleAreas.Add(ComputeArea(triangle));
                     drawSurface.Children.Add(triangle);
                 }
+                // If the polygon is CW and the cross product negative and the triangle is valid then we found an ear
                 else if (clockwise && cross <= 0 && ValidTriangle(triangle, p1, p2, p3))
                 {
                     points.Remove(p2);
@@ -153,6 +164,7 @@ namespace GEOproject
                 }
             }
 
+            // If there are only 2 points left then they already have the triangles drawn and computed
             if (points.Count() < 3)
             {
                 points.Clear();
