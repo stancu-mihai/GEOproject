@@ -29,6 +29,7 @@ namespace GEOproject
             InitializeComponent();
         }
 
+        // Draw a line on the canvas
         private void DrawLine(Point p1, Point p2)
         {
             Line line = new Line();
@@ -41,11 +42,13 @@ namespace GEOproject
             drawSurface.Children.Add(line);
         }
 
+        // get distance between two points
         private double GetLength(Point p1, Point p2)
         {
             return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
         }
 
+        // Compute the area of a triangle
         private double ComputeArea(Polygon triangle)
         {
             Point p1 = triangle.Points[0];
@@ -61,6 +64,8 @@ namespace GEOproject
             return Math.Sqrt( p * (p-len12) * (p-len23) * (p-len13));
         }
 
+        // Find out if the polygon was drawn in CW or CCW
+        // https://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order
         private bool IsClockwise()
         {
             double sum = 0;
@@ -73,13 +78,17 @@ namespace GEOproject
             return sum >= 0;
         }
 
-        private bool IsPointInPolygon(Polygon polygon, Point point)
+        // Determine if a point is in a polygon
+        // http://dominoc925.blogspot.com/2012/02/c-code-snippet-to-determine-if-point-is.html
+        private bool IsPointInPolygon(Polygon pg, Point p)
         {
             bool isInside = false;
-            for (int i = 0, j = polygon.Points.Count - 1; i < polygon.Points.Count; j = i++)
+            for (int i = 0, j = pg.Points.Count - 1; i < pg.Points.Count; j = i++) // i0 j2, i1 j0, i2 j1
             {
-                if (((polygon.Points[i].Y > point.Y) != (polygon.Points[j].Y > point.Y)) &&
-                (point.X < (polygon.Points[j].X - polygon.Points[i].X) * (point.Y - polygon.Points[i].Y) / (polygon.Points[j].Y - polygon.Points[i].Y) + polygon.Points[i].X))
+                Point pi = pg.Points[i];
+                Point pj = pg.Points[j];
+                if (((pi.Y > p.Y) != (pj.Y > p.Y)) &&
+                (p.X < (pj.X - pi.X) * (p.Y - pi.Y) / (pj.Y - pi.Y) + pi.X))
                 {
                     isInside = !isInside;
                 }
