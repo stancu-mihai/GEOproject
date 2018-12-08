@@ -15,6 +15,7 @@
         <Button Content="Close" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,9,0,0" Width="68" Height="25" Click="Close_Click"/>
         <Button Content="Undo" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="83,9,0,0" Width="68"  Height="25" Click="Undo_Click"/>
         <Button Content="Compute" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="157,9,0,0" Width="68"  Height="25" Click="Compute_Click"/>
+        <Button Content="Reset" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="231,9,0,0" Width="68"  Height="25" Click="Reset_Click"/>
         <Label x:Name="coords" Width="195" HorizontalAlignment="Right" Margin="0,6,9.6,377" RenderTransformOrigin="0.5,0.5"/>
     </Grid>
 </Window>

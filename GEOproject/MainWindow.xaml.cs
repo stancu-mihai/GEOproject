@@ -180,5 +180,26 @@ namespace GEOproject
             }
             MessageBox.Show("Total area is: " + summedArea);
         }
+
+        private void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            int len1 = drawSurface.Children.Count;
+            for (int i = len1 - 1; i >= 0; i--)
+            {
+                drawSurface.Children.RemoveAt(i);
+            }
+
+            int len2 = points.Count;
+            for (int i = len2 - 1; i >= 0; i--)
+            {
+                points.RemoveAt(i);
+            }
+
+            int len3 = triangleAreas.Count;
+            for (int i = len3 - 1; i >= 0; i--)
+            {
+                triangleAreas.RemoveAt(i);
+            }
+        }
     }
 }
