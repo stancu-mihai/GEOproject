@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Mihai Stancu's project" Height="450" Width="800">
     <Grid>
-        <Canvas  Name="drawSurface" MouseDown="Canvas_MouseDown_1">
+        <Canvas  Name="drawSurface" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" Grid.ColumnSpan="2" Margin="0,0,-0.4,0">
             <Canvas.Background>
                 <SolidColorBrush Color="White" Opacity="0"/>
             </Canvas.Background>
@@ -15,5 +15,6 @@
         <Button Content="Close" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,9,0,0" Width="68" Height="25" Click="Close_Click"/>
         <Button Content="Undo" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="83,9,0,0" Width="68"  Height="25" Click="Undo_Click"/>
         <Button Content="Compute" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="157,9,0,0" Width="68"  Height="25" Click="Compute_Click"/>
+        <Label x:Name="coords" Width="195" HorizontalAlignment="Right" Margin="0,6,9.6,377" RenderTransformOrigin="0.5,0.5"/>
     </Grid>
 </Window>

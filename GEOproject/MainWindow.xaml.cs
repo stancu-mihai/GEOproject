@@ -136,7 +136,7 @@ namespace GEOproject
             }
         }
 
-        private void Canvas_MouseDown_1(object sender, MouseButtonEventArgs e)
+        private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
             // If this is the first point
             if (points.Count() == 0)
@@ -150,6 +150,11 @@ namespace GEOproject
                 points.Add(currPoint);
                 DrawLine(lastPoint, currPoint);
             }
+        }
+
+        private void Canvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            coords.Content = e.GetPosition(this).X + "," + e.GetPosition(this).Y;
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
