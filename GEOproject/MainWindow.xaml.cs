@@ -31,7 +31,8 @@ namespace GEOproject
         private void DrawLine(Point p1, Point p2)
         {
             Line line = new Line();
-            line.Stroke = SystemColors.WindowFrameBrush;
+            line.StrokeThickness = 4;
+            line.Stroke = Brushes.Blue;
             line.X1 = p1.X;
             line.Y1 = p1.Y;
             line.X2 = p2.X;
@@ -85,6 +86,8 @@ namespace GEOproject
                 trianglePointCollection.Add(p2);
                 trianglePointCollection.Add(p3);
                 triangle.Points = trianglePointCollection;
+                triangle.Stroke = Brushes.Red;
+                triangle.StrokeThickness = 2;
 
                 if (!clockwise && cross >= 0 && ValidTriangle(triangle, p1, p2, p3))
                 {
