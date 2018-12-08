@@ -87,8 +87,8 @@ namespace GEOproject
             {
                 Point pi = pg.Points[i];
                 Point pj = pg.Points[j];
-                if (((pi.Y > p.Y) != (pj.Y > p.Y)) &&
-                (p.X < (pj.X - pi.X) * (p.Y - pi.Y) / (pj.Y - pi.Y) + pi.X))
+                if (((pi.Y > p.Y) != (pj.Y > p.Y)) && // vertically speaking, pi is on the other side of p as pj
+                (p.X < (pj.X - pi.X) * (p.Y - pi.Y) / (pj.Y - pi.Y) + pi.X)) //p.X < dist(pi, p).X + pi.X
                 {
                     isInside = !isInside;
                 }
