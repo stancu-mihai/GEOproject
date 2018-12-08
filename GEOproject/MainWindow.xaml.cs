@@ -22,6 +22,7 @@ namespace GEOproject
     {
         List<Point> points = new List<Point>();
         List<Polygon> triangles = new List<Polygon>();
+        List<double> triangleAreas = new List<double>();
 
         public MainWindow()
         {
@@ -38,6 +39,26 @@ namespace GEOproject
             line.X2 = p2.X;
             line.Y2 = p2.Y;
             drawSurface.Children.Add(line);
+        }
+
+        private double GetLength(Point p1, Point p2)
+        {
+            return Math.Sqrt(Math.Pow(p1.X - p2.X, 2) + Math.Pow(p1.Y - p2.Y, 2));
+        }
+
+        private double ComputeArea(Polygon triangle)
+        {
+            Point p1 = triangle.Points[0];
+            Point p2 = triangle.Points[1];
+            Point p3 = triangle.Points[2];
+
+            double len12 = GetLength(p1, p2);
+            double len23 = GetLength(p2, p3);
+            double len13 = GetLength(p1, p3);
+
+            double p = (len12 + len23 + len13)/ 2;
+
+            return Math.Sqrt( p * (p-len12) * (p-len23) * (p-len13));
         }
 
         private bool IsClockwise()
@@ -93,12 +114,14 @@ namespace GEOproject
                 {
                     points.Remove(p2);
                     triangles.Add(triangle);
+                    triangleAreas.Add(ComputeArea(triangle));
                     drawSurface.Children.Add(triangle);
                 }
                 else if (clockwise && cross <= 0 && ValidTriangle(triangle, p1, p2, p3))
                 {
                     points.Remove(p2);
                     triangles.Add(triangle);
+                    triangleAreas.Add(ComputeArea(triangle));
                     drawSurface.Children.Add(triangle);
                 }
                 else
@@ -145,6 +168,12 @@ namespace GEOproject
         private void Compute_Click(object sender, RoutedEventArgs e)
         {
             TriangulatePolygon();
+            double summedArea = 0;
+            foreach (double area in triangleAreas)
+            {
+                summedArea += area;
+            }
+            MessageBox.Show("Total area is: " + summedArea);
         }
     }
 }
