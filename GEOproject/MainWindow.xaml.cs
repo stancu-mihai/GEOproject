@@ -73,11 +73,25 @@ namespace GEOproject
             return sum >= 0;
         }
 
+        private bool IsPointInPolygon(Polygon polygon, Point point)
+        {
+            bool isInside = false;
+            for (int i = 0, j = polygon.Points.Count - 1; i < polygon.Points.Count; j = i++)
+            {
+                if (((polygon.Points[i].Y > point.Y) != (polygon.Points[j].Y > point.Y)) &&
+                (point.X < (polygon.Points[j].X - polygon.Points[i].X) * (point.Y - polygon.Points[i].Y) / (polygon.Points[j].Y - polygon.Points[i].Y) + polygon.Points[i].X))
+                {
+                    isInside = !isInside;
+                }
+            }
+            return isInside;
+        }
+
         private bool ValidTriangle(Polygon triangle, Point p1, Point p2, Point p3)
         {
             foreach (Point p in points)
             {
-                if (p != p1 && p != p2 && p != p3 && triangle.Points.IndexOf(p) >= 0)
+                if (p != p1 && p != p2 && p != p3 && IsPointInPolygon(triangle, p))
                 {
                     return false;
                 }
@@ -92,10 +106,10 @@ namespace GEOproject
 
             while (points.Count() > 2)
             {
-
-                Point p1 = points[(index + 0) % points.Count()];
-                Point p2 = points[(index + 1) % points.Count()];
-                Point p3 = points[(index + 2) % points.Count()];
+                int len = points.Count();
+                Point p1 = points[(index + 0) % len];
+                Point p2 = points[(index + 1) % len];
+                Point p3 = points[(index + 2) % len];
                 
                 Vector v1 = new Vector(p2.X - p1.X, p2.Y - p1.Y);
                 Vector v2 = new Vector(p3.X - p1.X, p3.Y - p1.Y);
