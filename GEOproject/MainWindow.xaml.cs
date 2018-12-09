@@ -52,9 +52,9 @@ namespace GEOproject
             double len23 = GetLength(p2, p3);
             double len13 = GetLength(p1, p3);
 
-            double p = (len12 + len23 + len13)/ 2;
+            double p = (len12 + len23 + len13) / 2;
 
-            return Math.Sqrt( p * (p-len12) * (p-len23) * (p-len13));
+            return Math.Sqrt(p * (p - len12) * (p - len23) * (p - len13));
         }
 
         // Find out if the polygon was drawn in CW or CCW
@@ -71,25 +71,19 @@ namespace GEOproject
             return sum >= 0;
         }
 
-        // Determine if a point is in a polygon by looping through the sides in the same direction,
-        // while checking if the number of nodes is odd (meaning the point is inside)
-        // http://dominoc925.blogspot.com/2012/02/c-code-snippet-to-determine-if-point-is.html
+        // Determine if a point is in a polygon by looking at the projection of the point on two sides of the triangle
+        // https://www.youtube.com/watch?v=HYAgJN3x4GA
         private bool IsPointInTriangle(Polygon pg, Point p)
         {
-            bool isInside = false;
-            int j = pg.Points.Count - 1; // starts from the last point
-            for (int i = 0; i < pg.Points.Count; i++) // loops through each side of the polygon
-            {
-                Point pi = pg.Points[i];
-                Point pj = pg.Points[j];
-                if (((pi.Y > p.Y) != (pj.Y > p.Y)) && // vertically speaking, pi is on the other side of p as pj
-                (p.X < (pj.X - pi.X) * (p.Y - pi.Y) / (pj.Y - pi.Y) + pi.X)) //p.X < dist(pi, p).X + pi.X
-                {
-                    isInside = !isInside;
-                }
-                j = i;
-            }
-            return isInside;
+            Point A = pg.Points[0];
+            Point B = pg.Points[1];
+            Point C = pg.Points[2];
+
+            double w1 = (A.X * (C.Y - A.Y) + (p.Y - A.Y) * (C.X - A.X) - p.X * (C.Y - A.Y)) /
+                ((B.Y - A.Y) * (C.X - A.X) - (B.X - A.X) * (C.Y - A.Y));
+            double w2 = (p.Y - A.Y - w1 * (B.Y - A.Y)) / (C.Y - A.Y);
+
+            return (w1 >= 0) && (w2 >= 0) && (w1 + w2 <= 1);
         }
 
         // Checks if the triangle is valid
@@ -119,7 +113,7 @@ namespace GEOproject
                 Point p1 = points[(index + 0) % len];
                 Point p2 = points[(index + 1) % len];
                 Point p3 = points[(index + 2) % len];
-                
+
                 // Makes vectors and cross product
                 Vector v1 = new Vector(p2.X - p1.X, p2.Y - p1.Y);
                 Vector v2 = new Vector(p3.X - p1.X, p3.Y - p1.Y);
